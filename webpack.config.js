@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // Is the current build a development build
 const IS_DEV = (process.env.NODE_ENV === 'dev');
@@ -16,11 +17,12 @@ const appHtmlTitle = 'Webpack Boilerplate';
  */
 module.exports = {
     entry: {
-        vendor: [
+     /*   vendor: [
             'lodash'
-        ],
+        ],*/
         bundle: path.join(dirApp, 'index')
     },
+    
     resolve: {
         modules: [
             dirNode,
@@ -28,15 +30,17 @@ module.exports = {
             dirAssets
         ]
     },
+    
     plugins: [
         new webpack.DefinePlugin({
             IS_DEV: IS_DEV
         }),
 
         new HtmlWebpackPlugin({
-            template: path.join(__dirname, 'index.ejs'),
+            template: path.join(__dirname, 'index.html'),
             title: appHtmlTitle
-        })
+        }),
+        // new BundleAnalyzerPlugin()
     ],
     module: {
         rules: [
@@ -92,6 +96,13 @@ module.exports = {
                 options: {
                     name: '[path][name].[ext]'
                 }
+            },
+            
+            //ENABLE SOURCE MAPS
+            {
+                test: /\.js$/,
+                use: ["source-map-loader"],
+                enforce: "pre"
             }
         ]
     }
